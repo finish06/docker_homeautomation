@@ -1,0 +1,64 @@
+version: '2'
+services:
+  HASS:
+    image: homeassistant/home-assistant
+    container_name: hass
+    volumes:
+      - "~/configuration_files/hass:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: always
+    ports:
+      - 8123:8123
+    links:
+      - mqtt
+  NodeSonos:
+    build: ./node-sonos-http-api
+    image: node-sonos-http-api
+    container_name: node_sonos
+    network_mode: host
+    restart: always
+  mqtt:
+    image: matteocollina/mosca
+    container_name: mqtt
+    restart: always
+    ports:
+      - 1883:1883
+  MQTTbridge:
+    image: stjohnjohnson/smartthings-mqtt-bridge
+    container_name: st_bridge
+    restart: always
+    volumes:
+      - "~/configuration_files/st_mqtt_bridge:/config"
+    ports:
+      - 8080:8080
+    links:
+      - mqtt
+  living_room_node_harmony:
+    build: ./harmony-api
+    image: harmony-api
+    container_name: living_room_harmony
+    restart: always
+    volumes:
+      - "~/configuration_files/node_harmony/living_room:/config"
+    ports:
+      - 8281:8282
+  office_node_harmony:
+    image: harmony-api
+    container_name: office_harmony
+    restart: always
+    volumes:
+      - "~/configuration_files/node_harmony/office:/config"
+    ports:
+      - 8282:8282
+    links:
+      - mqtt
+  master_bedroom_node_harmony:
+    image: harmony-api
+    container_name: master_bedroom_harmony
+    restart: always
+    volumes:
+      - "~/configuration_files/node_harmony/master_bedroom:/config"
+    ports:
+      - 8283:8282
+    links:
+      - mqtt
