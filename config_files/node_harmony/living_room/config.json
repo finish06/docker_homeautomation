@@ -1,0 +1,5 @@
+{
+  "mqtt_host": "http://127.0.0.1",
+  "hub_ip": "192.168.1.219",
+  "topic_namespace": "harmony.living_room"
+}
