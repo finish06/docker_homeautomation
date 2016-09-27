@@ -7,10 +7,7 @@ services:
       - "~/configuration_files/hass:/config"
       - "/etc/localtime:/etc/localtime:ro"
     restart: always
-    ports:
-      - 8123:8123
-    links:
-      - mqtt
+    network_mode: host
   NodeSonos:
     build: ./node-sonos-http-api
     image: node-sonos-http-api
